@@ -47,8 +47,7 @@
     cursor: pointer;
     box-shadow: 0 0 25px orange;
     margin-top: 25px;
-    width: auto;
-    display: inline-block;
+    display: block;
   }
   #openBtn:hover { transform: scale(1.05); }
 
@@ -88,8 +87,7 @@
     position: fixed;
     top:50%; left:50%;
     transform: translate(-50%,-50%);
-    background:white url("https://i.ibb.co/9V6t2R3/spiderweb.png") no-repeat top right;
-    background-size: 120px;
+    background:white;
     color:black;
     padding: 40px;
     border-radius: 20px;
@@ -104,13 +102,15 @@
   .navBtn {
     background: linear-gradient(45deg, orange, red);
     border: none;
-    padding: 12px 24px;
-    margin: 10px;
+    padding: 14px 28px;
+    margin: 12px;
     border-radius: 12px;
     cursor: pointer;
     color:white;
     font-weight: bold;
     box-shadow: 0 0 15px orange;
+    display: inline-block;
+    width: auto;
   }
 
   /* Botón mute */
@@ -157,11 +157,23 @@ for(let i=0;i<25;i++){
 <div id="flash"></div>
 
 <!-- Calavera SVG -->
-<svg id="skull" width="200" height="200" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="32" cy="24" r="18" fill="white" stroke="black" stroke-width="2"/>
-  <circle cx="24" cy="20" r="4" fill="black"/>
-  <circle cx="40" cy="20" r="4" fill="black"/>
-  <rect x="22" y="36" width="20" height="12" fill="white" stroke="black" stroke-width="2" class="jaw"/>
+<svg id="skull" width="200" height="220" viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cráneo -->
+  <ellipse cx="32" cy="28" rx="20" ry="22" fill="white" stroke="black" stroke-width="2"/>
+  <!-- Ojos -->
+  <ellipse cx="23" cy="24" rx="5" ry="7" fill="black"/>
+  <ellipse cx="41" cy="24" rx="5" ry="7" fill="black"/>
+  <!-- Nariz -->
+  <polygon points="30,30 34,30 32,36" fill="black"/>
+  <!-- Mandíbula -->
+  <rect x="18" y="45" width="28" height="15" fill="white" stroke="black" stroke-width="2" class="jaw"/>
+  <!-- Dientes -->
+  <line x1="22" y1="45" x2="22" y2="60" stroke="black"/>
+  <line x1="26" y1="45" x2="26" y2="60" stroke="black"/>
+  <line x1="30" y1="45" x2="30" y2="60" stroke="black"/>
+  <line x1="34" y1="45" x2="34" y2="60" stroke="black"/>
+  <line x1="38" y1="45" x2="38" y2="60" stroke="black"/>
+  <line x1="42" y1="45" x2="42" y2="60" stroke="black"/>
 </svg>
 
 <!-- Hojas -->
@@ -173,9 +185,7 @@ for(let i=0;i<25;i++){
 
 <div id="page2" class="page">
   <h2>📍 Ubicación</h2>
-  <a href="https://www.google.com/maps" target="_blank">
-    <button class="navBtn">Ver en Maps</button>
-  </a>
+  <button class="navBtn" onclick="window.open('https://www.google.com/maps','_blank')">Ver en Maps</button>
   <div>
     <button class="navBtn" onclick="prevPage(1)">Anterior</button>
     <button class="navBtn" onclick="nextPage(3)">Siguiente</button>
@@ -197,17 +207,14 @@ let laugh=document.getElementById("laugh");
 
 // Abrir invitación
 document.getElementById("openBtn").onclick=()=>{
-  // flash aparece más tiempo
   flash.style.opacity=1;
   setTimeout(()=>flash.style.opacity=0,4000);
 
-  // calavera aparece
   skull.style.opacity=1;
   laugh.play();
 
   document.getElementById("start").style.display="none";
 
-  // ocultar calavera y mostrar página
   setTimeout(()=>{
     skull.style.opacity=0;
     document.getElementById("page1").style.display="block";
