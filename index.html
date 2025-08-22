@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invitación Halloween 🎃</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: black;
+    color: white;
+    overflow: hidden;
+  }
+
+  /* Partículas naranjas flotando */
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    background: orange;
+    box-shadow: 0 0 15px orange;
+    opacity: 0.7;
+    animation: float 10s infinite;
+  }
+
+  @keyframes float {
+    from { transform: translateY(100vh); opacity: 0.3; }
+    to { transform: translateY(-10vh); opacity: 1; }
+  }
+
+  /* Contenedor inicial */
+  #start {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  #openBtn {
+    background: orange;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 0 20px orange;
+    margin-top: 20px;
+  }
+
+  /* Flash negro */
+  #flash {
+    position: fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:black;
+    opacity:0;
+    pointer-events:none;
+    transition: opacity 0.6s;
+  }
+
+  /* Calabaza SVG */
+  #pumpkin {
+    position: fixed;
+    top:50%; left:50%;
+    transform: translate(-50%,-50%);
+    opacity:0;
+    transition: opacity 2s;
+  }
+
+  /* Hojas */
+  .page {
+    display:none;
+    position: fixed;
+    top:50%; left:50%;
+    transform: translate(-50%,-50%);
+    background:white;
+    color:black;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+    box-shadow: 0 0 25px orange;
+  }
+  .navBtn {
+    background: linear-gradient(45deg, orange, darkorange);
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    color:white;
+    font-weight: bold;
+    box-shadow: 0 0 15px orange;
+  }
+
+  /* Botón mute */
+  #muteBtn {
+    position: fixed;
+    top:10px; right:10px;
+    background: rgba(255,140,0,0.8);
+    border:none;
+    padding:10px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 15px orange;
+  }
+
+  /* Shake animación */
+  @keyframes shake {
+    0%, 100% { transform: translate(-50%,-50%) rotate(0deg); }
+    25% { transform: translate(-48%,-52%) rotate(2deg); }
+    50% { transform: translate(-52%,-48%) rotate(-2deg); }
+    75% { transform: translate(-50%,-50%) rotate(1deg); }
+  }
+  .shake { animation: shake 0.5s; }
+</style>
+</head>
+<body>
+
+<!-- Música -->
+<audio id="bgMusic" src="DeFondo5.mp3" loop></audio>
+<audio id="laugh" src="risa.mp3"></audio> <!-- risa tenebrosa -->
+
+<button id="muteBtn">🔊</button>
+
+<!-- Partículas -->
+<script>
+for(let i=0;i<25;i++){
+  let p=document.createElement("div");
+  p.className="particle";
+  p.style.width=p.style.height=(Math.random()*8+4)+"px";
+  p.style.left=Math.random()*100+"vw";
+  p.style.animationDuration=(Math.random()*10+5)+"s";
+  document.body.appendChild(p);
+}
+</script>
+
+<!-- Inicio -->
+<div id="start">
+  <div style="font-size:4rem">✉️</div>
+  <button id="openBtn">¡ABRIR INVITACIÓN!</button>
+</div>
+
+<!-- Flash -->
+<div id="flash"></div>
+
+<!-- Calabaza SVG -->
+<svg id="pumpkin" width="200" height="200" viewBox="0 0 64 64" fill="orange" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="32" cy="32" rx="20" ry="25" stroke="black" stroke-width="2"/>
+  <ellipse cx="22" cy="32" rx="10" ry="20" stroke="black" stroke-width="2"/>
+  <ellipse cx="42" cy="32" rx="10" ry="20" stroke="black" stroke-width="2"/>
+  <rect x="28" y="5" width="8" height="10" fill="green"/>
+  <path d="M25 40 Q32 50 39 40" stroke="black" stroke-width="2" fill="yellow"/>
+</svg>
+
+<!-- Hojas -->
+<div id="page1" class="page">🎃👻 Has sido invitado 👻🎃
+  <div><button class="navBtn" onclick="nextPage(2)">Siguiente</button></div>
+</div>
+<div id="page2" class="page">📍 Ubicación
+  <div><a href="https://www.google.com/maps" target="_blank"><button class="navBtn">Ver en Maps</button></a></div>
+  <div>
+    <button class="navBtn" onclick="prevPage(1)">Anterior</button>
+    <button class="navBtn" onclick="nextPage(3)">Siguiente</button>
+  </div>
+</div>
+<div id="page3" class="page">✨ Esperamos que vengas ✨
+  <div><button class="navBtn" onclick="prevPage(2)">Anterior</button></div>
+</div>
+
+<script>
+let music=document.getElementById("bgMusic");
+let muteBtn=document.getElementById("muteBtn");
+let flash=document.getElementById("flash");
+let pumpkin=document.getElementById("pumpkin");
+let laugh=document.getElementById("laugh");
+
+document.getElementById("openBtn").onclick=()=>{
+  flash.style.opacity=1;
+  setTimeout(()=>flash.style.opacity=0,600);
+  pumpkin.style.opacity=1;
+  laugh.play();
+  document.getElementById("start").style.display="none";
+  pumpkin.classList.add("shake");
+  setTimeout(()=>{
+    pumpkin.style.opacity=0;
+    document.getElementById("page1").style.display="block";
+  },3000);
+  music.play();
+};
+
+muteBtn.onclick=()=>{
+  if(music.muted){ music.muted=false; muteBtn.textContent="🔊"; }
+  else { music.muted=true; muteBtn.textContent="🔇"; }
+};
+
+function nextPage(n){
+  document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+  document.getElementById("page"+n).style.display="block";
+}
+function prevPage(n){
+  document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+  document.getElementById("page"+n).style.display="block";
+}
+</script>
+
+</body>
+</html>
