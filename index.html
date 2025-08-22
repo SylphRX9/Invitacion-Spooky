@@ -52,8 +52,11 @@
     display: block;
     z-index: 3;
     position: relative;
+    transition: transform 0.2s;
   }
-  #openBtn:hover { transform: scale(1.05); }
+  #openBtn:hover { 
+    transform: scale(1.05); 
+  }
 
   /* Flash negro */
   #flash {
@@ -65,26 +68,6 @@
     pointer-events:none;
     transition: opacity 3s;
     z-index: 5;
-  }
-
-  /* Cara sonriente */
-  #smiley {
-    position: fixed;
-    top:50%; left:50%;
-    transform: translate(-50%,-50%);
-    opacity:0;
-    transition: opacity 2s;
-    z-index: 4;
-    width: 200px;
-    height: 200px;
-  }
-  .mouth {
-    transform-origin: center;
-    animation: smileAnim 2s infinite;
-  }
-  @keyframes smileAnim {
-    0%,100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
   }
 
   /* Hojas */
@@ -104,7 +87,11 @@
     font-size: 1.3rem;
     z-index: 10;
   }
-  .page h2 { color: darkorange; text-shadow: 0 0 5px red; }
+  .page h2 { 
+    color: darkorange; 
+    text-shadow: 0 0 5px red; 
+    margin-top: 0;
+  }
 
   .navBtn {
     background: linear-gradient(45deg, orange, red);
@@ -120,6 +107,10 @@
     width: auto;
     position: relative;
     z-index: 11;
+    transition: transform 0.2s;
+  }
+  .navBtn:hover {
+    transform: scale(1.05);
   }
 
   /* Botón mute */
@@ -128,25 +119,44 @@
     top:10px; right:10px;
     background: rgba(255,140,0,0.9);
     border:none;
-    padding:10px;
+    padding:12px;
     border-radius: 50%;
     cursor: pointer;
     box-shadow: 0 0 15px orange;
     z-index: 20;
+    font-size: 1.2rem;
+  }
+
+  /* Mensaje de audio */
+  #audioMessage {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    padding: 10px 20px;
+    border-radius: 20px;
+    z-index: 20;
+    display: none;
+    color: orange;
+    font-size: 0.9rem;
   }
 </style>
 </head>
 <body>
 
-<!-- Música -->
+<!-- Música de fondo y risa -->
 <audio id="bgMusic" loop>
-  <source src="https://assets.mixkit.co/music/preview/mixkit-horror-booth-14.mp3" type="audio/mp3">
+  <!-- Reemplaza con tu archivo DeFondo5.mp3 -->
+  <source src="DeFondo5.mp3" type="audio/mp3">
 </audio>
 <audio id="laugh">
-  <source src="https://assets.mixkit.co/sfx/preview/mixkit-funny-cartoon-laugh-343.mp3" type="audio/mp3">
+  <!-- Reemplaza con tu archivo risa.mp3 -->
+  <source src="risa.mp3" type="audio/mp3">
 </audio>
 
 <button id="muteBtn">🔊</button>
+<div id="audioMessage">Haz clic en cualquier lugar para activar el audio</div>
 
 <!-- Partículas -->
 <script>
@@ -168,19 +178,6 @@ for(let i=0;i<25;i++){
 
 <!-- Flash -->
 <div id="flash"></div>
-
-<!-- Cara sonriente SVG -->
-<svg id="smiley" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <!-- Círculo de la cara -->
-  <circle cx="50" cy="50" r="45" fill="#FFD700" stroke="#000" stroke-width="2"/>
-  
-  <!-- Ojos -->
-  <circle cx="35" cy="40" r="5" fill="#000"/>
-  <circle cx="65" cy="40" r="5" fill="#000"/>
-  
-  <!-- Sonrisa -->
-  <path class="mouth" d="M 30 65 Q 50 80 70 65" stroke="#000" stroke-width="3" fill="none" stroke-linecap="round"/>
-</svg>
 
 <!-- Hojas -->
 <div id="page1" class="page">
@@ -207,71 +204,90 @@ for(let i=0;i<25;i++){
 </div>
 
 <script>
-let music=document.getElementById("bgMusic");
-let muteBtn=document.getElementById("muteBtn");
-let flash=document.getElementById("flash");
-let smiley=document.getElementById("smiley");
-let laugh=document.getElementById("laugh");
+let music = document.getElementById("bgMusic");
+let muteBtn = document.getElementById("muteBtn");
+let flash = document.getElementById("flash");
+let laugh = document.getElementById("laugh");
+let audioMessage = document.getElementById("audioMessage");
+let audioEnabled = false;
 
-// Abrir invitación
-document.getElementById("openBtn").onclick=()=>{
-  flash.style.opacity=1;
-  setTimeout(()=>flash.style.opacity=0,4000);
+// Solucionar problema del botón - asegurar que todo el botón es clickeable
+document.getElementById("openBtn").addEventListener('click', openInvitation);
 
-  smiley.style.opacity=1;
-  
-  // Intentar reproducir la risa
-  laugh.play().catch(e => {
-    console.log("La reproducción automática fue prevenida: ", e);
-  });
-
-  document.getElementById("start").style.display="none";
-
-  setTimeout(()=>{
-    smiley.style.opacity=0;
-    document.getElementById("page1").style.display="block";
-  },3000);
-
-  // Intentar reproducir música de fondo
-  music.play().catch(e => {
-    console.log("La reproducción automática fue prevenida: ", e);
-    // Si falla, establecer muted como true
-    music.muted = true;
-    muteBtn.textContent="🔇";
-  });
-};
-
-// mute
-muteBtn.onclick=()=>{
-  if(music.muted){ 
-    music.muted=false; 
-    muteBtn.textContent="🔊"; 
-  } else { 
-    music.muted=true; 
-    muteBtn.textContent="🔇"; 
-  }
-};
-
-// navegación
-function nextPage(n){
-  document.querySelectorAll(".page").forEach(p=>p.style.display="none");
-  document.getElementById("page"+n).style.display="block";
-}
-function prevPage(n){
-  document.querySelectorAll(".page").forEach(p=>p.style.display="none");
-  document.getElementById("page"+n).style.display="block";
-}
-
-// Permitir que el usuario inicie la música después de la interacción
-document.body.addEventListener('click', function() {
-  if (music.paused && music.readyState > 2) {
-    music.play().then(() => {
-      console.log("Música iniciada después de la interacción del usuario");
-    }).catch(e => {
-      console.log("Error al reproducir música: ", e);
-    });
+// Mostrar mensaje de audio si está desactivado
+window.addEventListener('click', function() {
+  if (!audioEnabled) {
+    try {
+      // Intentar reproducir un sonido breve para activar el audio
+      let audioTest = new Audio();
+      audioTest.src = 'data:audio/wav;base64,UklGRnoAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoAAAC';
+      audioTest.play().then(() => {
+        audioEnabled = true;
+        audioMessage.style.display = 'none';
+        
+        // Ahora intentar reproducir la música de fondo
+        music.play().catch(e => {
+          console.log("Error al reproducir música:", e);
+        });
+      }).catch(e => {
+        console.log("No se pudo activar el audio:", e);
+        audioMessage.style.display = 'block';
+      });
+    } catch(e) {
+      console.log("Error al intentar activar audio:", e);
+    }
   }
 }, { once: true });
+
+// Función para abrir la invitación
+function openInvitation() {
+  flash.style.opacity = 1;
+  setTimeout(() => flash.style.opacity = 0, 4000);
+
+  document.getElementById("start").style.display = "none";
+
+  setTimeout(() => {
+    document.getElementById("page1").style.display = "block";
+    
+    // Reproducir risa después de la interacción del usuario
+    if (audioEnabled) {
+      laugh.play().catch(e => {
+        console.log("Error al reproducir risa:", e);
+      });
+    }
+  }, 3000);
+
+  // Reproducir música de fondo si el audio está habilitado
+  if (audioEnabled) {
+    music.play().catch(e => {
+      console.log("Error al reproducir música:", e);
+    });
+  }
+}
+
+// Control de mute
+muteBtn.onclick = () => {
+  if (music.muted) { 
+    music.muted = false; 
+    if (laugh.muted) laugh.muted = false;
+    muteBtn.textContent = "🔊"; 
+  } else { 
+    music.muted = true; 
+    laugh.muted = true;
+    muteBtn.textContent = "🔇"; 
+  }
+};
+
+// Navegación
+function nextPage(n) {
+  document.querySelectorAll(".page").forEach(p => p.style.display = "none");
+  document.getElementById("page" + n).style.display = "block";
+}
+
+function prevPage(n) {
+  document.querySelectorAll(".page").forEach(p => p.style.display = "none");
+  document.getElementById("page" + n).style.display = "block";
+}
 </script>
 </body>
 </html>
