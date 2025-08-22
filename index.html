@@ -209,10 +209,10 @@ let laugh = document.getElementById("laugh");
 let audioMessage = document.getElementById("audioMessage");
 let audioEnabled = false;
 
-// Solucionar problema del botón
+// Botón abrir
 document.getElementById("openBtn").addEventListener('click', openInvitation);
 
-// Activar audio tras primer clic en pantalla
+// Activar audio tras primer clic global (backup)
 window.addEventListener('click', function() {
   if (!audioEnabled) {
     let audioTest = new Audio();
@@ -221,44 +221,36 @@ window.addEventListener('click', function() {
       audioEnabled = true;
       audioMessage.style.display = 'none';
       music.play().catch(e => console.log("Error música:", e));
-    }).catch(e => {
+    }).catch(() => {
       audioMessage.style.display = 'block';
     });
   }
 }, { once: true });
 
-// Función abrir invitación
+// Abrir invitación
 function openInvitation() {
+  // habilita audio por ser gesto de usuario y reproduce la risa de inmediato
+  audioEnabled = true;
+  try { laugh.currentTime = 0; laugh.play(); } catch(e) {}
+
   flash.style.opacity = 1;
   setTimeout(() => flash.style.opacity = 0, 4000);
 
   document.getElementById("start").style.display = "none";
 
-  // 🔊 La risa suena de inmediato al abrir
-  if (audioEnabled) {
-    laugh.play().catch(e => console.log("Error risa:", e));
-  }
-
   setTimeout(() => {
     document.getElementById("page1").style.display = "block";
   }, 3000);
 
-  if (audioEnabled) {
-    music.play().catch(e => console.log("Error música:", e));
-  }
+  try { music.play(); } catch(e) {}
 }
 
 // Botón mute
 muteBtn.onclick = () => {
-  if (music.muted) { 
-    music.muted = false; 
-    laugh.muted = false;
-    muteBtn.textContent = "🔊"; 
-  } else { 
-    music.muted = true; 
-    laugh.muted = true;
-    muteBtn.textContent = "🔇"; 
-  }
+  const muted = !music.muted;
+  music.muted = muted;
+  laugh.muted = muted;
+  muteBtn.textContent = muted ? "🔇" : "🔊";
 };
 
 // Navegación
