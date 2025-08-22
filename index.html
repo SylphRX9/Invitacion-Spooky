@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Invitación Halloween 🎃</title>
+<title>Invitación Halloween 💀</title>
 <style>
   body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: "Creepster", Arial, sans-serif;
     background: black;
     color: white;
     overflow: hidden;
@@ -20,32 +20,37 @@
     background: orange;
     box-shadow: 0 0 15px orange;
     opacity: 0.7;
-    animation: float 10s infinite;
+    animation: float 10s infinite linear;
   }
-
   @keyframes float {
     from { transform: translateY(100vh); opacity: 0.3; }
     to { transform: translateY(-10vh); opacity: 1; }
   }
 
-  /* Contenedor inicial */
+  /* Pantalla de inicio */
   #start {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
+    z-index: 2;
+    position: relative;
   }
   #openBtn {
-    background: orange;
-    padding: 12px 24px;
+    background: linear-gradient(45deg, orange, darkred);
+    padding: 15px 40px;
     border: none;
-    border-radius: 10px;
-    font-size: 1.2rem;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 0 20px orange;
-    margin-top: 20px;
+    box-shadow: 0 0 25px orange;
+    margin-top: 25px;
+    width: auto;
+    display: inline-block;
   }
+  #openBtn:hover { transform: scale(1.05); }
 
   /* Flash negro */
   #flash {
@@ -55,16 +60,26 @@
     background:black;
     opacity:0;
     pointer-events:none;
-    transition: opacity 0.6s;
+    transition: opacity 3s;
+    z-index: 5;
   }
 
-  /* Calabaza SVG */
-  #pumpkin {
+  /* Calavera */
+  #skull {
     position: fixed;
     top:50%; left:50%;
     transform: translate(-50%,-50%);
     opacity:0;
     transition: opacity 2s;
+    z-index: 4;
+  }
+  .jaw {
+    transform-origin: center top;
+    animation: laughAnim 1s infinite;
+  }
+  @keyframes laughAnim {
+    0%,100% { transform: rotate(0deg); }
+    50% { transform: rotate(20deg); }
   }
 
   /* Hojas */
@@ -73,19 +88,23 @@
     position: fixed;
     top:50%; left:50%;
     transform: translate(-50%,-50%);
-    background:white;
+    background:white url("https://i.ibb.co/9V6t2R3/spiderweb.png") no-repeat top right;
+    background-size: 120px;
     color:black;
     padding: 40px;
     border-radius: 20px;
     text-align: center;
-    width: 80%;
-    max-width: 400px;
-    box-shadow: 0 0 25px orange;
+    width: 85%;
+    max-width: 420px;
+    box-shadow: 0 0 25px orange, 0 0 40px darkred inset;
+    font-size: 1.3rem;
   }
+  .page h2 { color: darkorange; text-shadow: 0 0 5px red; }
+
   .navBtn {
-    background: linear-gradient(45deg, orange, darkorange);
+    background: linear-gradient(45deg, orange, red);
     border: none;
-    padding: 10px 20px;
+    padding: 12px 24px;
     margin: 10px;
     border-radius: 12px;
     cursor: pointer;
@@ -98,29 +117,21 @@
   #muteBtn {
     position: fixed;
     top:10px; right:10px;
-    background: rgba(255,140,0,0.8);
+    background: rgba(255,140,0,0.9);
     border:none;
     padding:10px;
     border-radius: 50%;
     cursor: pointer;
     box-shadow: 0 0 15px orange;
+    z-index: 6;
   }
-
-  /* Shake animación */
-  @keyframes shake {
-    0%, 100% { transform: translate(-50%,-50%) rotate(0deg); }
-    25% { transform: translate(-48%,-52%) rotate(2deg); }
-    50% { transform: translate(-52%,-48%) rotate(-2deg); }
-    75% { transform: translate(-50%,-50%) rotate(1deg); }
-  }
-  .shake { animation: shake 0.5s; }
 </style>
 </head>
 <body>
 
 <!-- Música -->
-<audio id="bgMusic" src="DeFondo5.mp3" loop></audio>
-<audio id="laugh" src="risa.mp3"></audio> <!-- risa tenebrosa -->
+<audio id="bgMusic" src="Defondo5.mp3" loop></audio>
+<audio id="laugh" src="risa.mp3"></audio>
 
 <button id="muteBtn">🔊</button>
 
@@ -138,63 +149,80 @@ for(let i=0;i<25;i++){
 
 <!-- Inicio -->
 <div id="start">
-  <div style="font-size:4rem">✉️</div>
-  <button id="openBtn">¡ABRIR INVITACIÓN!</button>
+  <div style="font-size:5rem">✉️</div>
+  <button id="openBtn">ABRIR INVITACIÓN</button>
 </div>
 
 <!-- Flash -->
 <div id="flash"></div>
 
-<!-- Calabaza SVG -->
-<svg id="pumpkin" width="200" height="200" viewBox="0 0 64 64" fill="orange" xmlns="http://www.w3.org/2000/svg">
-  <ellipse cx="32" cy="32" rx="20" ry="25" stroke="black" stroke-width="2"/>
-  <ellipse cx="22" cy="32" rx="10" ry="20" stroke="black" stroke-width="2"/>
-  <ellipse cx="42" cy="32" rx="10" ry="20" stroke="black" stroke-width="2"/>
-  <rect x="28" y="5" width="8" height="10" fill="green"/>
-  <path d="M25 40 Q32 50 39 40" stroke="black" stroke-width="2" fill="yellow"/>
+<!-- Calavera SVG -->
+<svg id="skull" width="200" height="200" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="32" cy="24" r="18" fill="white" stroke="black" stroke-width="2"/>
+  <circle cx="24" cy="20" r="4" fill="black"/>
+  <circle cx="40" cy="20" r="4" fill="black"/>
+  <rect x="22" y="36" width="20" height="12" fill="white" stroke="black" stroke-width="2" class="jaw"/>
 </svg>
 
 <!-- Hojas -->
-<div id="page1" class="page">🎃👻 Has sido invitado 👻🎃
-  <div><button class="navBtn" onclick="nextPage(2)">Siguiente</button></div>
+<div id="page1" class="page">
+  <h2>🎃👻 Has sido invitado 👻🎃</h2>
+  <p>Prepárate para una noche terrorífica...</p>
+  <button class="navBtn" onclick="nextPage(2)">Siguiente</button>
 </div>
-<div id="page2" class="page">📍 Ubicación
-  <div><a href="https://www.google.com/maps" target="_blank"><button class="navBtn">Ver en Maps</button></a></div>
+
+<div id="page2" class="page">
+  <h2>📍 Ubicación</h2>
+  <a href="https://www.google.com/maps" target="_blank">
+    <button class="navBtn">Ver en Maps</button>
+  </a>
   <div>
     <button class="navBtn" onclick="prevPage(1)">Anterior</button>
     <button class="navBtn" onclick="nextPage(3)">Siguiente</button>
   </div>
 </div>
-<div id="page3" class="page">✨ Esperamos que vengas ✨
-  <div><button class="navBtn" onclick="prevPage(2)">Anterior</button></div>
+
+<div id="page3" class="page">
+  <h2>✨ Esperamos que vengas ✨</h2>
+  <p>Será una noche de miedo y diversión...</p>
+  <button class="navBtn" onclick="prevPage(2)">Anterior</button>
 </div>
 
 <script>
 let music=document.getElementById("bgMusic");
 let muteBtn=document.getElementById("muteBtn");
 let flash=document.getElementById("flash");
-let pumpkin=document.getElementById("pumpkin");
+let skull=document.getElementById("skull");
 let laugh=document.getElementById("laugh");
 
+// Abrir invitación
 document.getElementById("openBtn").onclick=()=>{
+  // flash aparece más tiempo
   flash.style.opacity=1;
-  setTimeout(()=>flash.style.opacity=0,600);
-  pumpkin.style.opacity=1;
+  setTimeout(()=>flash.style.opacity=0,4000);
+
+  // calavera aparece
+  skull.style.opacity=1;
   laugh.play();
+
   document.getElementById("start").style.display="none";
-  pumpkin.classList.add("shake");
+
+  // ocultar calavera y mostrar página
   setTimeout(()=>{
-    pumpkin.style.opacity=0;
+    skull.style.opacity=0;
     document.getElementById("page1").style.display="block";
   },3000);
+
   music.play();
 };
 
+// mute
 muteBtn.onclick=()=>{
   if(music.muted){ music.muted=false; muteBtn.textContent="🔊"; }
   else { music.muted=true; muteBtn.textContent="🔇"; }
 };
 
+// navegación
 function nextPage(n){
   document.querySelectorAll(".page").forEach(p=>p.style.display="none");
   document.getElementById("page"+n).style.display="block";
@@ -204,6 +232,6 @@ function prevPage(n){
   document.getElementById("page"+n).style.display="block";
 }
 </script>
-
 </body>
 </html>
+
