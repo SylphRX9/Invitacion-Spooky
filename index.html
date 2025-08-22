@@ -11,6 +11,7 @@
     background: black;
     color: white;
     overflow: hidden;
+    height: 100vh;
   }
 
   /* Partículas naranjas flotando */
@@ -21,6 +22,7 @@
     box-shadow: 0 0 15px orange;
     opacity: 0.7;
     animation: float 10s infinite linear;
+    z-index: 1;
   }
   @keyframes float {
     from { transform: translateY(100vh); opacity: 0.3; }
@@ -48,6 +50,8 @@
     box-shadow: 0 0 25px orange;
     margin-top: 25px;
     display: block;
+    z-index: 3;
+    position: relative;
   }
   #openBtn:hover { transform: scale(1.05); }
 
@@ -63,22 +67,24 @@
     z-index: 5;
   }
 
-  /* Calavera */
-  #skull {
+  /* Cara sonriente */
+  #smiley {
     position: fixed;
     top:50%; left:50%;
     transform: translate(-50%,-50%);
     opacity:0;
     transition: opacity 2s;
     z-index: 4;
+    width: 200px;
+    height: 200px;
   }
-  .jaw {
-    transform-origin: center top;
-    animation: laughAnim 1s infinite;
+  .mouth {
+    transform-origin: center;
+    animation: smileAnim 2s infinite;
   }
-  @keyframes laughAnim {
-    0%,100% { transform: rotate(0deg); }
-    50% { transform: rotate(20deg); }
+  @keyframes smileAnim {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
   }
 
   /* Hojas */
@@ -96,6 +102,7 @@
     max-width: 420px;
     box-shadow: 0 0 25px orange, 0 0 40px darkred inset;
     font-size: 1.3rem;
+    z-index: 10;
   }
   .page h2 { color: darkorange; text-shadow: 0 0 5px red; }
 
@@ -111,6 +118,8 @@
     box-shadow: 0 0 15px orange;
     display: inline-block;
     width: auto;
+    position: relative;
+    z-index: 11;
   }
 
   /* Botón mute */
@@ -123,15 +132,19 @@
     border-radius: 50%;
     cursor: pointer;
     box-shadow: 0 0 15px orange;
-    z-index: 6;
+    z-index: 20;
   }
 </style>
 </head>
 <body>
 
 <!-- Música -->
-<audio id="bgMusic" src="Defondo5.mp3" loop></audio>
-<audio id="laugh" src="risa.mp3"></audio>
+<audio id="bgMusic" loop>
+  <source src="https://assets.mixkit.co/music/preview/mixkit-horror-booth-14.mp3" type="audio/mp3">
+</audio>
+<audio id="laugh">
+  <source src="https://assets.mixkit.co/sfx/preview/mixkit-funny-cartoon-laugh-343.mp3" type="audio/mp3">
+</audio>
 
 <button id="muteBtn">🔊</button>
 
@@ -156,24 +169,17 @@ for(let i=0;i<25;i++){
 <!-- Flash -->
 <div id="flash"></div>
 
-<!-- Calavera SVG -->
-<svg id="skull" width="200" height="220" viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
-  <!-- Cráneo -->
-  <ellipse cx="32" cy="28" rx="20" ry="22" fill="white" stroke="black" stroke-width="2"/>
+<!-- Cara sonriente SVG -->
+<svg id="smiley" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Círculo de la cara -->
+  <circle cx="50" cy="50" r="45" fill="#FFD700" stroke="#000" stroke-width="2"/>
+  
   <!-- Ojos -->
-  <ellipse cx="23" cy="24" rx="5" ry="7" fill="black"/>
-  <ellipse cx="41" cy="24" rx="5" ry="7" fill="black"/>
-  <!-- Nariz -->
-  <polygon points="30,30 34,30 32,36" fill="black"/>
-  <!-- Mandíbula -->
-  <rect x="18" y="45" width="28" height="15" fill="white" stroke="black" stroke-width="2" class="jaw"/>
-  <!-- Dientes -->
-  <line x1="22" y1="45" x2="22" y2="60" stroke="black"/>
-  <line x1="26" y1="45" x2="26" y2="60" stroke="black"/>
-  <line x1="30" y1="45" x2="30" y2="60" stroke="black"/>
-  <line x1="34" y1="45" x2="34" y2="60" stroke="black"/>
-  <line x1="38" y1="45" x2="38" y2="60" stroke="black"/>
-  <line x1="42" y1="45" x2="42" y2="60" stroke="black"/>
+  <circle cx="35" cy="40" r="5" fill="#000"/>
+  <circle cx="65" cy="40" r="5" fill="#000"/>
+  
+  <!-- Sonrisa -->
+  <path class="mouth" d="M 30 65 Q 50 80 70 65" stroke="#000" stroke-width="3" fill="none" stroke-linecap="round"/>
 </svg>
 
 <!-- Hojas -->
@@ -185,8 +191,9 @@ for(let i=0;i<25;i++){
 
 <div id="page2" class="page">
   <h2>📍 Ubicación</h2>
+  <p>Casa Embrujada #123<br>Ciudad del Terror</p>
   <button class="navBtn" onclick="window.open('https://www.google.com/maps','_blank')">Ver en Maps</button>
-  <div>
+  <div style="margin-top: 15px;">
     <button class="navBtn" onclick="prevPage(1)">Anterior</button>
     <button class="navBtn" onclick="nextPage(3)">Siguiente</button>
   </div>
@@ -195,6 +202,7 @@ for(let i=0;i<25;i++){
 <div id="page3" class="page">
   <h2>✨ Esperamos que vengas ✨</h2>
   <p>Será una noche de miedo y diversión...</p>
+  <p>31 de Octubre - 8:00 PM</p>
   <button class="navBtn" onclick="prevPage(2)">Anterior</button>
 </div>
 
@@ -202,7 +210,7 @@ for(let i=0;i<25;i++){
 let music=document.getElementById("bgMusic");
 let muteBtn=document.getElementById("muteBtn");
 let flash=document.getElementById("flash");
-let skull=document.getElementById("skull");
+let smiley=document.getElementById("smiley");
 let laugh=document.getElementById("laugh");
 
 // Abrir invitación
@@ -210,23 +218,38 @@ document.getElementById("openBtn").onclick=()=>{
   flash.style.opacity=1;
   setTimeout(()=>flash.style.opacity=0,4000);
 
-  skull.style.opacity=1;
-  laugh.play();
+  smiley.style.opacity=1;
+  
+  // Intentar reproducir la risa
+  laugh.play().catch(e => {
+    console.log("La reproducción automática fue prevenida: ", e);
+  });
 
   document.getElementById("start").style.display="none";
 
   setTimeout(()=>{
-    skull.style.opacity=0;
+    smiley.style.opacity=0;
     document.getElementById("page1").style.display="block";
   },3000);
 
-  music.play();
+  // Intentar reproducir música de fondo
+  music.play().catch(e => {
+    console.log("La reproducción automática fue prevenida: ", e);
+    // Si falla, establecer muted como true
+    music.muted = true;
+    muteBtn.textContent="🔇";
+  });
 };
 
 // mute
 muteBtn.onclick=()=>{
-  if(music.muted){ music.muted=false; muteBtn.textContent="🔊"; }
-  else { music.muted=true; muteBtn.textContent="🔇"; }
+  if(music.muted){ 
+    music.muted=false; 
+    muteBtn.textContent="🔊"; 
+  } else { 
+    music.muted=true; 
+    muteBtn.textContent="🔇"; 
+  }
 };
 
 // navegación
@@ -238,7 +261,17 @@ function prevPage(n){
   document.querySelectorAll(".page").forEach(p=>p.style.display="none");
   document.getElementById("page"+n).style.display="block";
 }
+
+// Permitir que el usuario inicie la música después de la interacción
+document.body.addEventListener('click', function() {
+  if (music.paused && music.readyState > 2) {
+    music.play().then(() => {
+      console.log("Música iniciada después de la interacción del usuario");
+    }).catch(e => {
+      console.log("Error al reproducir música: ", e);
+    });
+  }
+}, { once: true });
 </script>
 </body>
 </html>
-
