@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -147,11 +147,9 @@
 
 <!-- Música de fondo y risa -->
 <audio id="bgMusic" loop>
-  <!-- Reemplaza con tu archivo DeFondo5.mp3 -->
   <source src="DeFondo5.mp3" type="audio/mp3">
 </audio>
 <audio id="laugh">
-  <!-- Reemplaza con tu archivo risa.mp3 -->
   <source src="risa.mp3" type="audio/mp3">
 </audio>
 
@@ -211,65 +209,50 @@ let laugh = document.getElementById("laugh");
 let audioMessage = document.getElementById("audioMessage");
 let audioEnabled = false;
 
-// Solucionar problema del botón - asegurar que todo el botón es clickeable
+// Solucionar problema del botón
 document.getElementById("openBtn").addEventListener('click', openInvitation);
 
-// Mostrar mensaje de audio si está desactivado
+// Activar audio tras primer clic en pantalla
 window.addEventListener('click', function() {
   if (!audioEnabled) {
-    try {
-      // Intentar reproducir un sonido breve para activar el audio
-      let audioTest = new Audio();
-      audioTest.src = 'data:audio/wav;base64,UklGRnoAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoAAAC';
-      audioTest.play().then(() => {
-        audioEnabled = true;
-        audioMessage.style.display = 'none';
-        
-        // Ahora intentar reproducir la música de fondo
-        music.play().catch(e => {
-          console.log("Error al reproducir música:", e);
-        });
-      }).catch(e => {
-        console.log("No se pudo activar el audio:", e);
-        audioMessage.style.display = 'block';
-      });
-    } catch(e) {
-      console.log("Error al intentar activar audio:", e);
-    }
+    let audioTest = new Audio();
+    audioTest.src = 'data:audio/wav;base64,UklGRnoAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoAAAC';
+    audioTest.play().then(() => {
+      audioEnabled = true;
+      audioMessage.style.display = 'none';
+      music.play().catch(e => console.log("Error música:", e));
+    }).catch(e => {
+      audioMessage.style.display = 'block';
+    });
   }
 }, { once: true });
 
-// Función para abrir la invitación
+// Función abrir invitación
 function openInvitation() {
   flash.style.opacity = 1;
   setTimeout(() => flash.style.opacity = 0, 4000);
 
   document.getElementById("start").style.display = "none";
 
+  // 🔊 La risa suena de inmediato al abrir
+  if (audioEnabled) {
+    laugh.play().catch(e => console.log("Error risa:", e));
+  }
+
   setTimeout(() => {
     document.getElementById("page1").style.display = "block";
-    
-    // Reproducir risa después de la interacción del usuario
-    if (audioEnabled) {
-      laugh.play().catch(e => {
-        console.log("Error al reproducir risa:", e);
-      });
-    }
   }, 3000);
 
-  // Reproducir música de fondo si el audio está habilitado
   if (audioEnabled) {
-    music.play().catch(e => {
-      console.log("Error al reproducir música:", e);
-    });
+    music.play().catch(e => console.log("Error música:", e));
   }
 }
 
-// Control de mute
+// Botón mute
 muteBtn.onclick = () => {
   if (music.muted) { 
     music.muted = false; 
-    if (laugh.muted) laugh.muted = false;
+    laugh.muted = false;
     muteBtn.textContent = "🔊"; 
   } else { 
     music.muted = true; 
@@ -283,7 +266,6 @@ function nextPage(n) {
   document.querySelectorAll(".page").forEach(p => p.style.display = "none");
   document.getElementById("page" + n).style.display = "block";
 }
-
 function prevPage(n) {
   document.querySelectorAll(".page").forEach(p => p.style.display = "none");
   document.getElementById("page" + n).style.display = "block";
